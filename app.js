@@ -1,12 +1,7 @@
-const fs = require('fs'); 
-const csv = require('csv-parser');
-const fileName = 'data'
+const System3 = require('./class/system3.js');
 
-fs.createReadStream('data.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-    console.log(row);
-  })
-  .on('end', () => {
-    console.log('CSV file successfully processed');
-  });
+//settings
+const srcFilename = './data.csv';
+
+const sys3 = new System3(srcFilename);
+sys3.run();
