@@ -9,6 +9,9 @@ class System3 {
         //source file
         this.srcFile = srcFile;
 
+        //sqlQuery
+        this.sqlQuery = 'select * from wp_users';
+
         //destination database headers
         this.destHeaderArray = [
             "DealerID","StockNumber","VIN","Year","Make","Model","TrimLevel","Condition","ExteriorColor","InteriorColor","EngineDescription","Transmission","DriveTrain",
@@ -45,7 +48,7 @@ class System3 {
             host     : 'dev.local',
             user     : 'root',
             password : 'wordpress',
-            database : 'drivedig_inventory'
+            database : 'wordpress'
           });
 
           //connect to our database
@@ -65,18 +68,35 @@ class System3 {
                 console.error(`> You may need to run the following on the SQL server`);
                 console.error(`  GRANT ALL PRIVILEGES ON *.* TO 'USERNAME'@'%' IDENTIFIED BY 'PASSWORD' WITH GRANT OPTION;`);
                 console.error();
-            } else {
-                //connection successful
-                connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-                    if (error) throw error;
-                    console.log('The solution is: ', results[0].solution);
-                });
-            }
+                return;
+            } 
           });
+
+          //sql query
+          this.query(connection, this.sqlQuery);
            
+          //terminate the connection
           connection.end((err) => {
               console.log(logSymbols.info, `The connection is terminated`);
           });
+    }
+
+    query(connection) {
+
+         /*test connection
+         connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+            if (error) throw error;
+            console.log('The solution is: ', results[0].solution);
+        });*/
+
+        connection.query(this.sqlQuery, (err, results, fields) => {
+            if(err) {
+                console.error(logSymbols.error, `The query failed`);
+                return;
+            }
+
+            console.log(results);
+        });
     }
 
     update(row) {
